@@ -23,9 +23,9 @@ const testConnection = (): Promise<void> => {
 };
 
 const insertUser = async (email: string, password: string): Promise<void> => {
-        const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        await pool.query('INSERT INTO users (email, password) VALUES ($1, $2)', [email, hashedPassword]);
+    await pool.query('INSERT INTO users (email, password) VALUES ($1, $2)', [email, hashedPassword]);
 };
 
 const authenticateUserByEmail = async (email: string, password: string): Promise<Express.User | Error> => {
@@ -45,6 +45,18 @@ const authenticateUserByEmail = async (email: string, password: string): Promise
     }
 };
 
+const fetchOrCreateByGoogleId = async (googleId: string, email: string): Promise<any | Error> => {
+    const res = await pool.query('SELECT * FROM users WHERE googleId = $1', [googleId]);
+
+    if (res.rows.length) {
+        return res.rows[0];
+    }
+
+    const newUser = await pool.query('INSERT INTO users (googleId, email) VALUES ($1, $2) RETURNING *', [googleId, email]);
+
+    return newUser;
+};
+
 const deserializeUserById = async (id: number): Promise<Express.User | Error> => {
     const res = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
 
@@ -61,5 +73,6 @@ export {
     testConnection,
     insertUser,
     authenticateUserByEmail,
+    fetchOrCreateByGoogleId,
     deserializeUserById
 };

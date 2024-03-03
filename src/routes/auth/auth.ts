@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { passport } from './passport';
+import { localPassport, googlePassport } from './passport';
 import { insertUser } from './../../db';
 
 const router = Router();
@@ -20,9 +20,14 @@ router.post('/register', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/login', passport.authenticate('local'), (req: Request, res: Response) => {
-    console.log('login request');
+router.post('/login', localPassport.authenticate('local'), (req: Request, res: Response) => {
     res.send('Logged in successfully');
+});
+
+router.get('/auth/google', googlePassport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/auth/google/callback', googlePassport.authenticate('google'), (req: Request, res: Response) => {
+    res.send('Google auth login successful'); 
 });
 
 export { router };

@@ -7,7 +7,6 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     async (email, password, done) => {
-        console.log('local');
         try {
             const user = await authenticateUserByEmail(email, password);
 

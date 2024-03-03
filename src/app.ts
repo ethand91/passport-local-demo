@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import { authRoutes, passport, protectedRoutes } from './routes';
+import { authRoutes, localPassport, googlePassport, protectedRoutes } from './routes';
 import { pool, pgSessionStore, testConnection } from './db';
 require('dotenv').config();
 
@@ -35,8 +35,11 @@ app.use(session({
     }
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(localPassport.initialize());
+app.use(localPassport.session());
+
+app.use(googlePassport.initialize());
+app.use(googlePassport.session());
 
 app.use(authRoutes);
 app.use(protectedRoutes);

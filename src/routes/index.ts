@@ -1,2 +1,2 @@
-export { router as authRoutes, passport } from './auth';
+export { router as authRoutes, localPassport, googlePassport } from './auth';
 export { router as protectedRoutes } from './protected';

@@ -4,5 +4,6 @@ export {
     testConnection,
     insertUser,
     authenticateUserByEmail,
+    fetchOrCreateByGoogleId,
     deserializeUserById
 } from './psql';

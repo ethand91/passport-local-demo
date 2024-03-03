@@ -1,3 +1,3 @@
 export { router } from './auth';
-export { passport } from './passport';
+export { localPassport, googlePassport } from './passport';
 export { ensureAuthenticated } from './helpers';
